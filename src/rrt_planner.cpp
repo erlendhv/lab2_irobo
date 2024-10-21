@@ -116,7 +116,7 @@ namespace rrt_planner
         double dy = point_rand[1] - point_nearest[1];
         double distance = sqrt(dx * dx + dy * dy);
 
-        const double fixed_extension_length = 0.25;
+        const double fixed_extension_length = 0.5;
 
         if (distance <= fixed_extension_length)
         {
