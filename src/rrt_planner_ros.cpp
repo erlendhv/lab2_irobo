@@ -53,6 +53,26 @@ namespace rrt_planner {
 
         initialize(name, costmap, costmap->getGlobalFrameID());
     }
+    
+    std::vector<geometry_msgs::PoseStamped> RRTPlannerROS::generateBezierPath(const std::vector<geometry_msgs::PoseStamped>& waypoints, int num_points) {
+    std::vector<geometry_msgs::PoseStamped> bezier_path;
+
+    for (size_t i = 0; i < waypoints.size() - 1; ++i) {
+        const auto& p0 = waypoints[i];
+        const auto& p1 = waypoints[i + 1];
+
+        for (int j = 0; j <= num_points; ++j) {
+            double t = static_cast<double>(j) / num_points;
+            geometry_msgs::PoseStamped point;
+            point.pose.position.x = (1 - t) * p0.pose.position.x + t * p1.pose.position.x;
+            point.pose.position.y = (1 - t) * p0.pose.position.y + t * p1.pose.position.y;
+            point.pose.position.z = 0.0; // 2D path
+            bezier_path.push_back(point);
+        }
+    }
+
+    return bezier_path;
+}
 
     bool RRTPlannerROS::makePlan(const geometry_msgs::PoseStamped& start, 
                                     const geometry_msgs::PoseStamped& goal, 
@@ -146,7 +166,8 @@ namespace rrt_planner {
 
         // Reverse so that initial waypoint is first and goal is last
         std::reverse(plan.begin(), plan.end());
-        publishPlan(plan);
+        std::vector<geometry_msgs::PoseStamped> bezier_plan = generateBezierPath(plan, 10); // 10 points per segment
+        publishPlan(bezier_plan); 
 
         return true;
 
