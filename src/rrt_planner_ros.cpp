@@ -66,7 +66,7 @@ namespace rrt_planner {
             geometry_msgs::PoseStamped point;
             point.pose.position.x = (1 - t) * p0.pose.position.x + t * p1.pose.position.x;
             point.pose.position.y = (1 - t) * p0.pose.position.y + t * p1.pose.position.y;
-            point.pose.position.z = 0.0; // 2D path
+            point.pose.position.z = 0.0; 
             bezier_path.push_back(point);
         }
     }

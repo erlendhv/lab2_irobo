@@ -16,15 +16,12 @@ namespace rrt_planner
 
     bool CollisionDetector::inFreeSpace(const double *world_pos)
     {
-        // Convert world coordinates to map coordinates
         unsigned int map_x, map_y;
         if (!costmap_->worldToMap(world_pos[0], world_pos[1], map_x, map_y))
         {
-            // If the point is outside the map, consider it as not free
             return false;
         }
 
-        // Get the cost of the cell at the calculated map coordinates
         unsigned char cost = costmap_->getCost(map_x, map_y);
 
         return (cost < costmap_2d::INSCRIBED_INFLATED_OBSTACLE);

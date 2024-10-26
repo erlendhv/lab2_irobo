@@ -21,10 +21,8 @@ namespace rrt_planner
     bool RRTPlanner::planPath()
     {
 
-        // clear everything before planning
         nodes_.clear();
 
-        // Start Node
         createNewNode(start_, -1);
 
         double *p_rand, *p_new;
@@ -35,7 +33,7 @@ namespace rrt_planner
 
             p_rand = sampleRandomPoint();
             nearest_node = nodes_[getNearestNodeId(p_rand)];
-            p_new = extendTree(nearest_node.pos, p_rand); // new point and node candidate
+            p_new = extendTree(nearest_node.pos, p_rand);
 
             if (!collision_dect_.obstacleBetween(nearest_node.pos, p_new))
             {
@@ -90,19 +88,15 @@ namespace rrt_planner
 
     double *RRTPlanner::sampleRandomPoint()
     {
-        // Generate a random number between 0 and 1
         double random_value = static_cast<double>(rand()) / RAND_MAX;
 
-        // With a probability of `goal_bias`, sample the goal directly
         if (random_value < 0.1)
         {
-            // Return the goal as the random point
             rand_point_[0] = goal_[0];
             rand_point_[1] = goal_[1];
         }
         else
         {
-            // Otherwise, sample a random point in the space
             rand_point_[0] = random_double_x.generate();
             rand_point_[1] = random_double_y.generate();
         }
